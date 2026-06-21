@@ -1,4 +1,4 @@
-const sdk = require('stremio-addon-sdk');
+const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
 const fetch = require('node-fetch');
 
 // Source M3U playlist (community-maintained)
@@ -16,7 +16,7 @@ const manifest = {
   ]
 };
 
-const builder = new sdk.AddonBuilder(manifest);
+const builder = new addonBuilder(manifest);
 let channels = {}; // id -> { name, url, logo }
 let loaded = false;
 
@@ -84,6 +84,6 @@ module.exports = addonInterface;
 
 if (require.main === module) {
   const port = process.env.PORT || 7000;
-  sdk.serveHTTP(addonInterface, { port });
+  serveHTTP(addonInterface, { port });
   console.log(`🚀 Addon listening on http://localhost:${port}/manifest.json`);
 }
