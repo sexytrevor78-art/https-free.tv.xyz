@@ -1,9 +1,5 @@
-const StremioSDK = require('stremio-addon-sdk');
+const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
 const fetch = require('node-fetch');
-
-// Extract what we need from SDK - handle different versions
-const addonBuilder = StremioSDK.addonBuilder || StremioSDK;
-const serveHTTP = StremioSDK.serveHTTP;
 
 // Source M3U playlist (community-maintained)
 const M3U_URL = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_plutotv.m3u';
@@ -20,7 +16,6 @@ const manifest = {
   ]
 };
 
-const builder = new addonBuilder(manifest);
 let channels = {}; // id -> { name, url, logo }
 let loaded = false;
 
@@ -53,37 +48,48 @@ async function loadChannels() {
   }
 }
 
-builder.defineCatalogHandler(async (args) => {
-  await loadChannels();
-  const metas = Object.keys(channels).map(id => {
+// Simple handlers object
+const handlers = {
+  catalog: async (args) => {
+    await loadChannels();
+    const metas = Object.keys(channels).map(id => {
+      const ch = channels[id];
+      return {
+        id,
+        type: 'tv',
+        name: ch.name,
+        poster: ch.logo || '',
+        logo: ch.logo || '',
+        releaseInfo: 'Live'
+      };
+    });
+    return { metas };
+  },
+
+  stream: async (args) => {
+    const { id } = args;
+    if (!channels[id]) return { streams: [] };
     const ch = channels[id];
     return {
-      id,
-      type: 'tv',
-      name: ch.name,
-      poster: ch.logo || '',
-      logo: ch.logo || '',
-      releaseInfo: 'Live'
+      streams: [
+        {
+          title: ch.name,
+          url: ch.url,
+          isFree: true
+        }
+      ]
     };
-  });
-  return { metas };
-});
+  }
+};
 
-builder.defineStreamHandler(async ({ id }) => {
-  if (!channels[id]) return { streams: [] };
-  const ch = channels[id];
-  return {
-    streams: [
-      {
-        title: ch.name,
-        url: ch.url,
-        isFree: true
-      }
-    ]
-  };
-});
+// Create addon using addonBuilder as constructor
+const addon = new addonBuilder(manifest);
 
-const addonInterface = builder.getInterface();
+// Register handlers
+addon.defineCatalogHandler(handlers.catalog);
+addon.defineStreamHandler(handlers.stream);
+
+const addonInterface = addon.getInterface();
 module.exports = addonInterface;
 
 if (require.main === module) {
