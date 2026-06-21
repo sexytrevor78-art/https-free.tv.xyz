@@ -1,4 +1,5 @@
-const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const StremioSDK = require('stremio-addon-sdk');
+const { addonBuilder, serveHTTP } = StremioSDK;
 const fetch = require('node-fetch');
 
 // Source M3U playlist (community-maintained)
