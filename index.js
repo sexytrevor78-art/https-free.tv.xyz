@@ -1,6 +1,9 @@
 const StremioSDK = require('stremio-addon-sdk');
-const { addonBuilder, serveHTTP } = StremioSDK;
 const fetch = require('node-fetch');
+
+// Extract what we need from SDK - handle different versions
+const addonBuilder = StremioSDK.addonBuilder || StremioSDK;
+const serveHTTP = StremioSDK.serveHTTP;
 
 // Source M3U playlist (community-maintained)
 const M3U_URL = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_plutotv.m3u';
@@ -17,7 +20,7 @@ const manifest = {
   ]
 };
 
-const builder = new addonBuilder.AddonBuilder(manifest);
+const builder = new addonBuilder(manifest);
 let channels = {}; // id -> { name, url, logo }
 let loaded = false;
 
@@ -43,10 +46,10 @@ async function loadChannels() {
         channels[id] = { name, url, logo };
       }
     }
-    console.log(`Loaded ${Object.keys(channels).length} channels`);
+    console.log(`✅ Loaded ${Object.keys(channels).length} channels from iptv-org`);
     loaded = true;
   } catch (err) {
-    console.error('Error loading channels:', err);
+    console.error('❌ Error loading channels:', err.message);
   }
 }
 
@@ -86,5 +89,5 @@ module.exports = addonInterface;
 if (require.main === module) {
   const port = process.env.PORT || 7000;
   serveHTTP(addonInterface, { port });
-  console.log(`Addon listening on http://localhost:${port}/manifest.json`);
+  console.log(`🚀 Addon listening on http://localhost:${port}/manifest.json`);
 }
