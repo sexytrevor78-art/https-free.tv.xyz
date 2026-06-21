@@ -48,8 +48,8 @@ async function loadChannels() {
   }
 }
 
-// Create addon - addonBuilder is a function, not a constructor
-const addon = addonBuilder(manifest);
+// Create addon - addonBuilder is a constructor, use 'new'
+const addon = new addonBuilder(manifest);
 
 // Register handlers
 addon.defineCatalogHandler(async (args) => {
@@ -88,5 +88,5 @@ module.exports = addonInterface;
 if (require.main === module) {
   const port = process.env.PORT || 7000;
   serveHTTP(addonInterface, { port });
-  console.log(`🚀 Addon listening on http://localhost:${port}/manifest.json`);
+  console.log(`🚀 Red Dragon addon listening on http://localhost:${port}/manifest.json`);
 }
