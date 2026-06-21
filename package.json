@@ -1,7 +1,7 @@
 {
-  "name": "pluto-tv-us-stremio-addon",
+  "name": "red-dragon-stremio-addon",
   "version": "1.0.0",
-  "description": "Unofficial Pluto TV US addon for Stremio (uses iptv-org playlist)",
+  "description": "Red Dragon - Unofficial Pluto TV US addon for Stremio (uses iptv-org playlist)",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

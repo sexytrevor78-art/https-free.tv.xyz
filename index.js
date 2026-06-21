@@ -5,14 +5,14 @@ const fetch = require('node-fetch');
 const M3U_URL = 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/us_plutotv.m3u';
 
 const manifest = {
-  id: 'org.sexytrevor78.plutotv-us',
+  id: 'org.sexytrevor78.red-dragon',
   version: '1.0.0',
-  name: 'Pluto TV US (Unofficial)',
-  description: 'Unofficial Pluto TV US live channels via iptv-org playlist.',
+  name: 'Red Dragon (Pluto TV US)',
+  description: 'Red Dragon - Unofficial Pluto TV US live channels via iptv-org playlist.',
   resources: ['catalog', 'stream'],
   types: ['tv'],
   catalogs: [
-    { type: 'tv', id: 'pluto-us', name: 'Pluto TV (US)' }
+    { type: 'tv', id: 'red-dragon-pluto-us', name: 'Red Dragon - Pluto TV (US)' }
   ]
 };
 
@@ -37,7 +37,7 @@ async function loadChannels() {
       const tvgId = tvgIdMatch ? tvgIdMatch[1] : name.replace(/\s+/g, '_').toLowerCase();
       const logoMatch = meta.match(/tvg-logo="([^"]+)"/);
       const logo = logoMatch ? logoMatch[1] : null;
-      const id = `pluto-us:${tvgId}`;
+      const id = `red-dragon:${tvgId}`;
       channels[id] = { name, url, logo };
     }
   }

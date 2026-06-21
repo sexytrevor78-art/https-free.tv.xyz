@@ -1,10 +1,16 @@
-Pluto TV US Stremio Addon (Unofficial)
+# Red Dragon — Stremio Addon (Unofficial)
 
-This repository contains a minimal Stremio addon that exposes Pluto TV (United States) live channels using the community-maintained iptv-org M3U playlist as the source of stream URLs.
+Red Dragon exposes Pluto TV (United States) live channels as a Stremio addon using the community-maintained iptv-org M3U playlist as the stream source.
 
-Important: This is an unofficial project. Pluto TV does not provide a public API for direct streaming for third-party addons; the playlist comes from the iptv-org project which aggregates public stream links. Use responsibly and respect Pluto TV's terms of service.
+Important: This is an unofficial project. Pluto TV does not provide a public API for third-party streaming; the playlist comes from the iptv-org project which aggregates public stream links. Use responsibly and respect Pluto TV's terms of service.
 
-Quick start (local):
+## Add-on manifest (use this URL in Stremio)
+
+Add this manifest URL in Stremio's "Manual / Custom Add-on" field to add the addon directly:
+
+https://raw.githubusercontent.com/sexytrevor78-art/https-free.tv.xyz/main/manifest.json
+
+## Quick start (local)
 
 1. Install dependencies
 
@@ -14,26 +20,19 @@ Quick start (local):
 
    npm start
 
-3. In Stremio, add a custom addon and point it to the manifest URL:
+3. In Stremio, add a custom add-on and point it to the manifest URL above or to:
 
    http://localhost:7000/manifest.json
 
-   (If running the addon on a public host, replace with the public URL to /manifest.json.)
+## What I changed
 
-What I added
+- Renamed the addon to **Red Dragon** in code and package metadata.
+- Added a top-level `manifest.json` so people can add the raw GitHub manifest URL directly to Stremio.
 
-- index.js — Node.js Stremio addon using stremio-addon-sdk. It fetches the iptv-org Pluto TV US M3U and exposes channels as a tv catalog and stream endpoints.
-- package.json — dependencies and start script.
-- README.md — usage and notes.
+## Next steps
 
-Notes and next steps
+- Switch the source to Pluto's unofficial API endpoints (requires US IP and careful header handling).
+- Improve metadata (/meta resource) or add EPG support.
+- Deploy to a public host and provide a stable manifest URL.
 
-- The addon uses the iptv-org playlist (https://github.com/iptv-org/iptv) as the source. If you prefer using Pluto's own endpoints, I can update the addon to query their unofficial APIs instead (may require geo/U.S. IP and token handling).
-- If you want the addon to be hosted (so you can add it by URL in Stremio without running locally), I can add a GitHub Actions workflow to deploy it to a hosting provider (e.g., Render) or help you set up a small server.
-
-If you'd like, I can now:
-- Switch the source to Pluto's unofficial API endpoints (attempt best-effort) instead of iptv-org; or
-- Add a /meta resource with more detailed metadata per channel; or
-- Deploy the addon to a public URL for you.
-
-Tell me which of those you want next.
+Tell me which of the next steps you want and I will implement it.

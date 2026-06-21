@@ -1,0 +1,11 @@
+{
+  "id": "org.sexytrevor78.red-dragon",
+  "version": "1.0.0",
+  "name": "Red Dragon (Pluto TV US)",
+  "description": "Red Dragon - Unofficial Pluto TV US live channels via iptv-org playlist.",
+  "resources": ["catalog", "stream"],
+  "types": ["tv"],
+  "catalogs": [
+    { "type": "tv", "id": "red-dragon-pluto-us", "name": "Red Dragon - Pluto TV (US)" }
+  ]
+}
