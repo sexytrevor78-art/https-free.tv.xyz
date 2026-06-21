@@ -1,4 +1,4 @@
-const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const sdk = require('stremio-addon-sdk');
 const fetch = require('node-fetch');
 
 // Source M3U playlist (community-maintained)
@@ -16,6 +16,7 @@ const manifest = {
   ]
 };
 
+const builder = new sdk.AddonBuilder(manifest);
 let channels = {}; // id -> { name, url, logo }
 let loaded = false;
 
@@ -48,11 +49,7 @@ async function loadChannels() {
   }
 }
 
-// Create addon - addonBuilder is a function, not a constructor
-const addon = addonBuilder(manifest);
-
-// Register handlers
-addon.defineCatalogHandler(async (args) => {
+builder.defineCatalogHandler(async (args) => {
   await loadChannels();
   const metas = Object.keys(channels).map(id => {
     const ch = channels[id];
@@ -68,7 +65,7 @@ addon.defineCatalogHandler(async (args) => {
   return { metas };
 });
 
-addon.defineStreamHandler(async ({ id }) => {
+builder.defineStreamHandler(async ({ id }) => {
   if (!channels[id]) return { streams: [] };
   const ch = channels[id];
   return {
@@ -82,11 +79,11 @@ addon.defineStreamHandler(async ({ id }) => {
   };
 });
 
-const addonInterface = addon.getInterface();
+const addonInterface = builder.getInterface();
 module.exports = addonInterface;
 
 if (require.main === module) {
   const port = process.env.PORT || 7000;
-  serveHTTP(addonInterface, { port });
+  sdk.serveHTTP(addonInterface, { port });
   console.log(`🚀 Addon listening on http://localhost:${port}/manifest.json`);
 }
