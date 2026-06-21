@@ -1,0 +1,9 @@
+# Red Dragon — Stremio Addon (Unofficial)
+
+Red Dragon exposes Pluto TV (United States) live channels as a Stremio addon using the community-maintained iptv-org M3U playlist as the stream source.
+
+**Important:** This is an unofficial project. Pluto TV does not provide a public API for third-party streaming; the playlist comes from the iptv-org project which aggregates public stream links. Use responsibly.
+
+## 📲 Addon Link
+
+Copy this URL and paste it into Stremio (Add-ons → Custom Add-on):https://https-free-tv-xyz.onrender.com/manifest.json
