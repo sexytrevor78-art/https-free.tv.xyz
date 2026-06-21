@@ -2,37 +2,53 @@
 
 Red Dragon exposes Pluto TV (United States) live channels as a Stremio addon using the community-maintained iptv-org M3U playlist as the stream source.
 
-Important: This is an unofficial project. Pluto TV does not provide a public API for third-party streaming; the playlist comes from the iptv-org project which aggregates public stream links. Use responsibly and respect Pluto TV's terms of service.
+**Important:** This is an unofficial project. Pluto TV does not provide a public API for third-party streaming; the playlist comes from the iptv-org project which aggregates public stream links. Use responsibly.
 
-## Add-on manifest (use this URL in Stremio)
+## ⚡ Quick Deploy to Render.com (FREE)
 
-Add this manifest URL in Stremio's "Manual / Custom Add-on" field to add the addon directly:
+1. Go to [Render.com](https://render.com) and sign up (takes 2 minutes)
+2. Click **"New +"** → **"Web Service"**
+3. Connect your GitHub account
+4. Select this repository (`sexytrevor78-art/https-free.tv.xyz`)
+5. Render will auto-detect the `render.yaml` config
+6. Click **"Create Web Service"** and wait ~2 minutes for deployment
+7. Copy your service URL (looks like: `https://red-dragon-addon-xxxx.onrender.com`)
 
-https://raw.githubusercontent.com/sexytrevor78-art/https-free.tv.xyz/main/manifest.json
+## 📱 Add to Stremio
 
-## Quick start (local)
+Once deployed on Render:
 
-1. Install dependencies
+1. Open **Stremio** on your device
+2. Go to **Add-ons** → **Custom Add-on**
+3. Enter your Render URL followed by `/manifest.json`:
+   ```
+   https://your-red-dragon-url.onrender.com/manifest.json
+   ```
+4. Click **Install** and enjoy Pluto TV live channels!
 
-   npm install
+## 🏠 Run Locally
 
-2. Run the addon
+```bash
+npm install
+npm start
+```
 
-   npm start
+Then in Stremio, add custom add-on:
+```
+http://localhost:7000/manifest.json
+```
 
-3. In Stremio, add a custom add-on and point it to the manifest URL above or to:
+## 🔧 What's Inside
 
-   http://localhost:7000/manifest.json
+- **index.js** — Stremio addon server that fetches channels from iptv-org
+- **manifest.json** — Addon metadata
+- **render.yaml** — Deployment config for Render.com
+- **.github/workflows/deploy.yml** — Auto-deploy on code changes
 
-## What I changed
+## 🚀 Next Steps (Optional)
 
-- Renamed the addon to **Red Dragon** in code and package metadata.
-- Added a top-level `manifest.json` so people can add the raw GitHub manifest URL directly to Stremio.
+- Switch to Pluto TV's unofficial API for more reliable streams
+- Add EPG (Electronic Program Guide) support
+- Add channel search/filtering
 
-## Next steps
-
-- Switch the source to Pluto's unofficial API endpoints (requires US IP and careful header handling).
-- Improve metadata (/meta resource) or add EPG support.
-- Deploy to a public host and provide a stable manifest URL.
-
-Tell me which of the next steps you want and I will implement it.
+Let me know which improvements you'd like!
