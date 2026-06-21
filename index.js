@@ -48,46 +48,39 @@ async function loadChannels() {
   }
 }
 
-// Simple handlers object
-const handlers = {
-  catalog: async (args) => {
-    await loadChannels();
-    const metas = Object.keys(channels).map(id => {
-      const ch = channels[id];
-      return {
-        id,
-        type: 'tv',
-        name: ch.name,
-        poster: ch.logo || '',
-        logo: ch.logo || '',
-        releaseInfo: 'Live'
-      };
-    });
-    return { metas };
-  },
-
-  stream: async (args) => {
-    const { id } = args;
-    if (!channels[id]) return { streams: [] };
-    const ch = channels[id];
-    return {
-      streams: [
-        {
-          title: ch.name,
-          url: ch.url,
-          isFree: true
-        }
-      ]
-    };
-  }
-};
-
-// Create addon using addonBuilder as constructor
-const addon = new addonBuilder(manifest);
+// Create addon - addonBuilder is a function, not a constructor
+const addon = addonBuilder(manifest);
 
 // Register handlers
-addon.defineCatalogHandler(handlers.catalog);
-addon.defineStreamHandler(handlers.stream);
+addon.defineCatalogHandler(async (args) => {
+  await loadChannels();
+  const metas = Object.keys(channels).map(id => {
+    const ch = channels[id];
+    return {
+      id,
+      type: 'tv',
+      name: ch.name,
+      poster: ch.logo || '',
+      logo: ch.logo || '',
+      releaseInfo: 'Live'
+    };
+  });
+  return { metas };
+});
+
+addon.defineStreamHandler(async ({ id }) => {
+  if (!channels[id]) return { streams: [] };
+  const ch = channels[id];
+  return {
+    streams: [
+      {
+        title: ch.name,
+        url: ch.url,
+        isFree: true
+      }
+    ]
+  };
+});
 
 const addonInterface = addon.getInterface();
 module.exports = addonInterface;
