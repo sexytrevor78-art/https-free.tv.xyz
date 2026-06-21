@@ -16,32 +16,37 @@ const manifest = {
   ]
 };
 
-const builder = new addonBuilder(manifest);
+const builder = new addonBuilder.AddonBuilder(manifest);
 let channels = {}; // id -> { name, url, logo }
 let loaded = false;
 
 async function loadChannels() {
   if (loaded) return;
-  const res = await fetch(M3U_URL);
-  const text = await res.text();
-  const lines = text.split(/\r?\n/);
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (!line) continue;
-    if (line.startsWith('#EXTINF')) {
-      const meta = line;
-      const url = lines[i + 1] ? lines[i + 1].trim() : '';
-      const nameMatch = meta.match(/,([^,\n\r]*)$/);
-      const name = nameMatch ? nameMatch[1].trim() : 'Unknown';
-      const tvgIdMatch = meta.match(/tvg-id="([^"]+)"/);
-      const tvgId = tvgIdMatch ? tvgIdMatch[1] : name.replace(/\s+/g, '_').toLowerCase();
-      const logoMatch = meta.match(/tvg-logo="([^"]+)"/);
-      const logo = logoMatch ? logoMatch[1] : null;
-      const id = `red-dragon:${tvgId}`;
-      channels[id] = { name, url, logo };
+  try {
+    const res = await fetch(M3U_URL);
+    const text = await res.text();
+    const lines = text.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      if (line.startsWith('#EXTINF')) {
+        const meta = line;
+        const url = lines[i + 1] ? lines[i + 1].trim() : '';
+        const nameMatch = meta.match(/,([^,\n\r]*)$/);
+        const name = nameMatch ? nameMatch[1].trim() : 'Unknown';
+        const tvgIdMatch = meta.match(/tvg-id="([^"]+)"/);
+        const tvgId = tvgIdMatch ? tvgIdMatch[1] : name.replace(/\s+/g, '_').toLowerCase();
+        const logoMatch = meta.match(/tvg-logo="([^"]+)"/);
+        const logo = logoMatch ? logoMatch[1] : null;
+        const id = `red-dragon:${tvgId}`;
+        channels[id] = { name, url, logo };
+      }
     }
+    console.log(`Loaded ${Object.keys(channels).length} channels`);
+    loaded = true;
+  } catch (err) {
+    console.error('Error loading channels:', err);
   }
-  loaded = true;
 }
 
 builder.defineCatalogHandler(async (args) => {
@@ -79,6 +84,6 @@ module.exports = addonInterface;
 
 if (require.main === module) {
   const port = process.env.PORT || 7000;
-  serveHTTP(addonInterface, port);
+  serveHTTP(addonInterface, { port });
   console.log(`Addon listening on http://localhost:${port}/manifest.json`);
 }
